@@ -1,101 +1,76 @@
 import Image from "next/image";
+import avatar from "@/assets/images/man.png";
+import { Button } from "@/components/ui/button";
+import { CiSearch } from "react-icons/ci";
+import { HiBadgeCheck } from "react-icons/hi";
+import { FaSortAmountUp } from "react-icons/fa";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import PostEditor from "@/components/form/PostEditor";
+import SinglePost from "@/components/shared/SinglePost";
+import Posts from "@/components/shared/Posts";
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <div className="font-[family-name:var(--font-geist-sans)]">
+      <main className="flex flex-col gap-8 items-center my-3">
+        <div className="post__items max-w-[600px]">
+          <div className="search_filter flex justify-between items-center mb-2">
+            <div className="flex gap-2 items-center">
+              <Select defaultValue="0">
+                <SelectTrigger className="w-[180px] h-[35px] text-gray-500">
+                  <SelectValue placeholder="Theme" />
+                </SelectTrigger>
+                <SelectContent color="green">
+                  <SelectItem value="0">Filter Post Type</SelectItem>
+                  <SelectItem value="story">Story</SelectItem>
+                  <SelectItem value="tip">Tips</SelectItem>
+                </SelectContent>
+              </Select>
+              <div className="border p-2 rounded-md cursor-pointer">
+                <FaSortAmountUp className="text-gray-500" />
+              </div>
+            </div>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+            <div className="">
+              <div className="relative">
+                <input
+                  placeholder="Search Here..."
+                  className="border text-sm border-solid border-black/[.08] dark:border-white/[.145] transition-colors w-full pl-2 p-[7px] rounded-md focus:outline-none focus:border-primary"
+                />
+                <Button
+                  size="sm"
+                  className="bg-primary absolute px-2 h-7 right-[3px] top-[3px]"
+                  variant="default"
+                >
+                  <CiSearch />
+                </Button>
+              </div>
+            </div>
+          </div>
+          <div className="create_post border rounded-md mb-4 p-4 flex gap-3 items-start">
             <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+              className="rounded-full border-2 border-secondary cursor-pointer"
+              src={avatar}
+              width={40}
+              height={40}
+              alt="profile picture"
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+            <div className="post_form flex flex-col gap-2 w-full">
+              <PostEditor/>
+              
+            </div>
+          </div>
+          
+          <Posts/>
         </div>
       </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center"></footer>
     </div>
   );
 }
