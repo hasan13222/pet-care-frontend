@@ -1,4 +1,3 @@
-
 import Myposts from "@/components/page/profile/Myposts";
 import UserInfo from "@/components/page/profile/UserInfo";
 

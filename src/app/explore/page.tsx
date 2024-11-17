@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import React from "react";
 import Image from "next/image";
 import avatar from "@/assets/images/man.png";
-import { useCheckLoginQuery } from "@/redux/api/authApi";
 
 const page = () => {
   return (

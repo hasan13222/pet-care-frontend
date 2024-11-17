@@ -1,18 +1,12 @@
-"use client";
 import Image from "next/image";
 import avatar from "@/assets/images/man.png";
 import { Button } from "@/components/ui/button";
 import ProfileEditComp from "@/components/page/profile/ProfileEditComp";
-import SinglePost from "@/components/shared/SinglePost";
 import PostEditor from "@/components/form/PostEditor";
-import { Fragment, useEffect, useState } from "react";
-import Posts from "@/components/shared/Posts";
-import { useGetProfileQuery } from "@/redux/api/userApi";
-import { useCheckLoginQuery } from "@/redux/api/authApi";
-const UserInfo = () => {
-  const {data: userData} = useCheckLoginQuery(undefined) 
-  const { data: user } = useGetProfileQuery(userData?.data.token);
-  
+import { axiosSecure } from "@/lib/axiosInstance";
+
+const UserInfo = async () => {
+  const { data: user } = await axiosSecure.get("/api/users/me");
   return (
     <>
       <div className="post_header flex items-center border p-5 rounded-md mb-3">

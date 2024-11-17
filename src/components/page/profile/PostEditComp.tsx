@@ -13,14 +13,14 @@ import {
 
 import "react-quill/dist/quill.snow.css";
 import { FaEdit } from "react-icons/fa";
-import { UpdateProfileForm } from "@/components/form/ProfileUpdateForm";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import dynamic from "next/dynamic";
-import { useCheckLoginQuery } from "@/redux/api/authApi";
 import { useUpdatePostMutation } from "@/redux/api/postApi";
 import { toast } from "@/hooks/use-toast";
 import { CustomError } from "@/types/errorType";
+import { AuthContext } from "@/provider/AuthProvider";
+import { useUpdatePost } from "@/hooks/post.hooks";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
@@ -28,12 +28,10 @@ const PostEditComp = ({ postDesc, postId }: any) => {
   const [alertOpen, setAlertOpen] = useState("");
   const [value, setValue] = useState(postDesc);
 
-    const { data: userData } = useCheckLoginQuery(undefined);  
+  const {user: userData} = useContext(AuthContext);
 
   
-  const [updatePost, { isError, error }] = useUpdatePostMutation(
-    userData?.data.token
-  );
+  const {mutate: updatePost} = useUpdatePost(postId);
 
   const handleChange = (val: string) => {
     setValue(val);
@@ -42,22 +40,10 @@ const PostEditComp = ({ postDesc, postId }: any) => {
   async function handleUpdatePost() {
     setAlertOpen("close");
     const updatedesc = { description: value };
-    const updatedPost = await updatePost({
-      postBody: updatedesc,
-      token: userData?.data.token,
-      postId,
-    });
-    if (updatedPost.data) {
-      toast({ title: "Post updated successfully" });
-    }
+    const updatedPost = await updatePost(updatedesc);
   }
 
-  if (isError) {
-    toast({
-      title: "Something went wrong",
-      description: (error as CustomError).data.message,
-    });
-  }
+  
   return (
     <AlertDialog
       onOpenChange={() => setAlertOpen("open")}

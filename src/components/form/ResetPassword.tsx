@@ -18,15 +18,17 @@ import {
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import { toast } from "@/hooks/use-toast";
-import { CustomError } from "@/types/errorType";
-import { useResetPasswordMutation } from "@/redux/api/authApi";
+import { useUserResetPassword } from "@/hooks/auth.hooks";
 
 const FormSchema = z.object({
   newPassword: z.string().min(4),
 });
 
 export function ResetPasswordForm({token}: any) {
-  const [resetPassword, { isLoading, isError, error }] = useResetPasswordMutation();
+  const {
+    mutate: handleUserResetPassword,
+    isPending,
+  } = useUserResetPassword();
   const router = useRouter();
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -36,25 +38,17 @@ export function ResetPasswordForm({token}: any) {
     },
   });
 
-  async function onSubmit(data: z.infer<typeof FormSchema>) {
-    const resetPassUser = await resetPassword({postBody: data, token});
-    if (resetPassUser.data) {
-      router.push("/");
-    }
-    toast({title: "Password reset success"})
+  function onSubmit(data: z.infer<typeof FormSchema>) {
+    const resetPassUser = handleUserResetPassword(data);
+    
   }
-  if (isLoading) {
+  if (isPending) {
     toast({
       title: "Please wait...",
       description: <p>Your Password is changing.</p>,
     });
   }
-  if (isError) {
-    toast({
-      title: "Something went wrong",
-      description: <p>{(error as CustomError)?.data?.message}</p>,
-    });
-  }
+  
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">

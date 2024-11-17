@@ -1,21 +1,21 @@
 "use client";
 import SinglePost from "@/components/shared/SinglePost";
-import { useCheckLoginQuery } from "@/redux/api/authApi";
+import { AuthContext } from "@/provider/AuthProvider";
 import { useGetUserPostsQuery } from "@/redux/api/postApi";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useContext, useEffect, useState } from "react";
 
-const Userposts = ({userId}:any) => {
-    const { data: userData } = useCheckLoginQuery(undefined);  
+const Userposts = ({ userId }: any) => {
+  const { user: userData } = useContext(AuthContext);
 
-   
-
- 
-  const { data: posts } = useGetUserPostsQuery({token: userData?.data.token, userId});
+  const { data: posts } = useGetUserPostsQuery({
+    token: userData?.data.token,
+    userId,
+  });
   return (
     <>
       {posts?.data?.map((post: any) => (
         <Fragment key={post._id}>
-          <SinglePost postInfo={post}/>
+          <SinglePost postInfo={post} />
         </Fragment>
       ))}
     </>

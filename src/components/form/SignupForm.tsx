@@ -17,11 +17,12 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
-import { useSignupUserMutation } from "@/redux/api/authApi";
+// import { useSignupUserMutation } from "@/redux/api/authApi"; 
 import { toast } from "@/hooks/use-toast";
 import { CustomError } from "@/types/errorType";
 import axios from "axios";
 import { useRef } from "react";
+import { useUserSignup } from "@/hooks/auth.hooks";
 
 const FormSchema = z.object({
   email: z.string().email({
@@ -36,7 +37,15 @@ const FormSchema = z.object({
 
 export function SignupForm() {
   const router = useRouter();
-  const [signup, { isLoading, isError, error }] = useSignupUserMutation();
+
+  const {
+    mutate: handleUserSignup,
+    isError,
+    isPending,
+    isSuccess,
+    error,
+  } = useUserSignup();
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -66,31 +75,26 @@ export function SignupForm() {
             ...data,
             profile_picture: imgData.data.data.display_url,
           };
-          const signedUpUser = await signup(newUser);
-          if (signedUpUser.data) {
-            router.push("/login");
-          }
-          toast({ title: "Signup success" });
+          handleUserSignup(newUser);
         })
         .catch(async () => {
-          const signedUpUser = await signup(data);
-          if (signedUpUser.data) {
-            router.push("/login");
-          }
-          toast({ title: "Signup success" });
+          handleUserSignup(data);
         });
     }
   }
-  if (isLoading) {
+  if (isPending) {
     toast({
       title: "Please wait...",
       description: <p>Your account registration is ongoing.</p>,
     });
   }
+  if (isSuccess) {
+    router.push("/login");
+  }
   if (isError) {
     toast({
       title: "Something went wrong",
-      description: <p>{(error as CustomError)?.data?.message}</p>,
+      description: <p>{error?.message}</p>,
     });
   }
   return (

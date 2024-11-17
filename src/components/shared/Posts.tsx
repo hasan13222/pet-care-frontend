@@ -1,16 +1,17 @@
 "use client";
-import { useCheckLoginQuery } from "@/redux/api/authApi";
 import { CustomError } from "@/types/errorType";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import SinglePost from "./SinglePost";
 import { useGetAllPostsQuery } from "@/redux/api/postApi";
 import { useRouter } from "next/navigation";
+import { AuthContext } from "@/provider/AuthProvider";
 
 const Posts = () => {
   const [hasMore, setHasMore] = useState(true);
   const [limit, setLimit] = useState(2);
-    const { data: userData } = useCheckLoginQuery(undefined);  
+    
+  const {userData} = useContext(AuthContext);
 
   
 

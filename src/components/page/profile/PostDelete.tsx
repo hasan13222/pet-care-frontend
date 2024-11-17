@@ -1,12 +1,12 @@
 "use client";
 import { toast } from "@/hooks/use-toast";
-import { useCheckLoginQuery } from "@/redux/api/authApi";
+import { AuthContext } from "@/provider/AuthProvider";
 import { useDeletePostMutation } from "@/redux/api/postApi";
 import { CustomError } from "@/types/errorType";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { MdDelete } from "react-icons/md";
 const PostDelete = ({ postId }: any) => {
-    const { data: userData } = useCheckLoginQuery(undefined);  
+    const { user: userData } = useContext(AuthContext);  
 
   
 

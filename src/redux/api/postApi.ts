@@ -2,16 +2,16 @@ import { baseApi } from "./baseApi";
 
 const postApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getMyPosts: builder.query({
-      query: (token) => ({
-        url: "/api/posts/my-post",
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }),
-      providesTags: ["posts"],
-    }),
+    // getMyPosts: builder.query({
+    //   query: (token) => ({
+    //     url: "/api/posts/my-post",
+    //     method: "GET",
+    //     headers: {
+    //       Authorization: `Bearer ${token}`,
+    //     },
+    //   }),
+    //   providesTags: ["posts"],
+    // }),
     getUserPosts: builder.query({
       query: (payload) => ({
         url: `/api/posts/${payload.userId}`,

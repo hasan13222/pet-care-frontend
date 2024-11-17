@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import Image from "next/image";
 import avatar from "@/assets/images/man.png";
 import { HiBadgeCheck } from "react-icons/hi";
@@ -9,13 +9,11 @@ import PostImage from "../page/profile/PostImage";
 import PostInteract from "../page/profile/PostInteract";
 import PostComments from "../page/profile/PostComments";
 import moment from "moment";
-import { useCheckLoginQuery } from "@/redux/api/authApi";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "../ui/button";
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -27,17 +25,20 @@ import {
 import { toast } from "@/hooks/use-toast";
 import { usePaymentPostMutation } from "@/redux/api/postApi";
 import { useRouter } from "next/navigation";
-import { useFollowUserMutation, useUnfollowUserMutation } from "@/redux/api/userApi";
+import {
+  useFollowUserMutation,
+  useUnfollowUserMutation,
+} from "@/redux/api/userApi";
+import { useGetMyProfile } from "@/hooks/user.hooks";
 
 const SinglePost = ({ postInfo, editOption = false }: any) => {
-  const { data: userData, refetch } = useCheckLoginQuery(undefined);  
-
-  
   const [alertOpen, setAlertOpen] = useState("");
   const stripe = useStripe();
   const elements = useElements();
 
   const router = useRouter();
+
+  const {data: userData} = useGetMyProfile();
 
   // follow unfollow
   const [follow, {}] = useFollowUserMutation(userData);
@@ -46,28 +47,35 @@ const SinglePost = ({ postInfo, editOption = false }: any) => {
   const [doPayment, {}] = usePaymentPostMutation(userData);
 
   const isUserGetAccess = postInfo?.accessUser.some(
-    (item: any) => item === userData.data._id
+    (item: any) => item === userData?.data._id
   );
-  
+
   const isUserFollowing = userData?.data.following.some(
     (item: any) => item === postInfo.user._id
   );
 
- const handleUserContent = () => {
-  if(userData.data._id !== postInfo.user._id &&
-  !isUserFollowing){
-    toast({title: "please follow to see the user content"})
-    return;
-  }
-  router.push(`/profile/${postInfo.user._id}`)
- }
+  const handleUserContent = () => {
+    if (userData?.data._id !== postInfo.user._id && !isUserFollowing) {
+      toast({ title: "please follow to see the user content" });
+      return;
+    }
+    router.push(`/profile/${postInfo.user._id}`);
+  };
 
   // follow unfollow
-  async function handleFollow(){
-    await follow({token: userData.data.token, userId: userData.data._id, postBody: {following: postInfo.user._id}})
+  async function handleFollow() {
+    await follow({
+      token: userData?.data.token,
+      userId: userData?.data._id,
+      postBody: { following: postInfo.user._id },
+    });
   }
-  async function handleUnFollow(){
-    await unfollow({token: userData.data.token, userId: userData.data._id, postBody: {following: postInfo.user._id}})
+  async function handleUnFollow() {
+    await unfollow({
+      token: userData?.data.token,
+      userId: userData?.data._id,
+      postBody: { following: postInfo.user._id },
+    });
   }
 
   const handlePay = async () => {
@@ -88,7 +96,6 @@ const SinglePost = ({ postInfo, editOption = false }: any) => {
         return;
       }
 
-      // const { error, paymentMethod } = await stripe.createPaymentMethod({
       const { error } = await stripe.createPaymentMethod({
         type: "card",
         card,
@@ -111,8 +118,8 @@ const SinglePost = ({ postInfo, editOption = false }: any) => {
             payment_method: {
               card: card,
               billing_details: {
-                name: userData.data?.name,
-                email: userData.data?.email,
+                name: userData?.data?.name,
+                email: userData?.data?.email,
               },
             },
           })
@@ -135,9 +142,8 @@ const SinglePost = ({ postInfo, editOption = false }: any) => {
     }
   };
 
-  useEffect(() => {
-    if (!userData) refetch();
-  }, []);
+
+
   return (
     <>
       <div className="post_single border rounded-md mb-5 p-4">
@@ -159,14 +165,22 @@ const SinglePost = ({ postInfo, editOption = false }: any) => {
                   {postInfo.user.name}
                 </h3>
 
-                {userData.data._id !== postInfo.user._id && isUserFollowing && (
-                  <Button onClick={handleUnFollow} className="bg-primary px-2 text-white" size={null}>
+                {userData?.data._id !== postInfo.user._id && isUserFollowing && (
+                  <Button
+                    onClick={handleUnFollow}
+                    className="bg-primary px-2 text-white"
+                    size={null}
+                  >
                     UnFollow
                   </Button>
                 )}
-                {userData.data._id !== postInfo.user._id &&
+                {userData?.data._id !== postInfo.user._id &&
                   !isUserFollowing && (
-                    <Button onClick={handleFollow} className="bg-primary px-2 text-white" size={null}>
+                    <Button
+                      onClick={handleFollow}
+                      className="bg-primary px-2 text-white"
+                      size={null}
+                    >
                       Follow
                     </Button>
                   )}
@@ -198,11 +212,11 @@ const SinglePost = ({ postInfo, editOption = false }: any) => {
             ReactHTMLParser(postInfo?.description)}
           {/* premium but self post*/}
           {postInfo.type === "premium" &&
-            postInfo.user._id === userData.data._id &&
+            postInfo.user._id === userData?.data._id &&
             ReactHTMLParser(postInfo?.description)}
           {/* premium not self post and not payed by user */}
           {postInfo.type === "premium" &&
-            postInfo.user._id !== userData.data._id &&
+            postInfo.user._id !== userData?.data._id &&
             !isUserGetAccess && (
               <>
                 {ReactHTMLParser(

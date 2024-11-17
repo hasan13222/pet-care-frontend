@@ -16,12 +16,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useRouter } from "next/navigation";
-import {useChangePasswordMutation, useCheckLoginQuery,
-} from "@/redux/api/authApi";
 import { toast } from "@/hooks/use-toast";
-import { CustomError } from "@/types/errorType";
-import { useEffect, useState } from "react";
+import { useUserChangePassword } from "@/hooks/auth.hooks";
 
 const FormSchema = z.object({
   email: z.string().email({
@@ -32,12 +28,13 @@ const FormSchema = z.object({
 });
 
 export function ChangePasswordForm() {
-    const { data: userData } = useCheckLoginQuery(undefined);  
 
-  
-  
-  const [changePassword, { isLoading, isError, error }] = useChangePasswordMutation();
-  const router = useRouter();
+  // const [changePassword, { isLoading, isError, error }] = useChangePasswordMutation();
+  const {
+    mutate: handleUserChangePassword,
+    isPending,
+  } = useUserChangePassword();
+  // const router = useRouter();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -48,26 +45,16 @@ export function ChangePasswordForm() {
     },
   });
 
-  async function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log(userData)
-    const changedPassUser = await changePassword({postBody: data, token: userData?.data?.token});
-    if (changedPassUser.data) {
-      router.push("/");
-    }
-    toast({title: "Password change success"})
+  function onSubmit(data: z.infer<typeof FormSchema>) {
+    handleUserChangePassword(data);
   }
-  if (isLoading) {
+  if (isPending) {
     toast({
       title: "Please wait...",
       description: <p>Your Password is changing.</p>,
     });
   }
-  if (isError) {
-    toast({
-      title: "Something went wrong",
-      description: <p>{(error as CustomError)?.data?.message}</p>,
-    });
-  }
+  
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">

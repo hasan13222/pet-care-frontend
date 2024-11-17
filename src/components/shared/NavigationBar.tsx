@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { NavigationMenuComp } from "./NavigationMenu";
 import {
   DropdownMenu,
@@ -13,25 +13,21 @@ import {
 import Image from "next/image";
 import avatar from "@/assets/images/man.png";
 import { useRouter } from "next/navigation";
-import { useCheckLoginQuery, useLazyLogoutQuery } from "@/redux/api/authApi";
 import { title } from "process";
 import { toast } from "@/hooks/use-toast";
 import { Button } from "../ui/button";
 import { useGetProfileQuery } from "@/redux/api/userApi";
+import { AuthContext } from "@/provider/AuthProvider";
+import { logout } from "@/services/authService";
 
 const NavigationBar = () => {
   const router = useRouter();
 
-  const { data: userData, refetch } = useCheckLoginQuery(undefined);
-  const [logout] = useLazyLogoutQuery(userData);
+  const {user} = useContext(AuthContext);
 
   const handleLogout = async () => {
-    const loggedOut = await logout(userData?.data.token);
-    if (loggedOut.data) {
-      refetch();
-      router.push("/login");
-      toast({ title: "You are logged out" });
-    }
+    await logout();
+    router.push('/');
   };
 
   return (
@@ -44,13 +40,13 @@ const NavigationBar = () => {
           <NavigationMenuComp />
         </div>
         <div className="user_profile flex gap-2 items-center">
-          {!userData?.data && (
+          {!user && (
             <Button onClick={() => router.push("/signup")}>Signup</Button>
           )}
-          {!userData?.data && (
+          {!user && (
             <Button onClick={() => router.push("/login")}>Login</Button>
           )}
-          {userData?.data && (
+          {user && (
             <DropdownMenu>
               <DropdownMenuTrigger>
                 <Image

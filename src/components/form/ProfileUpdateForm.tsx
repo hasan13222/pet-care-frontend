@@ -17,14 +17,14 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
-import { useCheckLoginQuery, useSignupUserMutation } from "@/redux/api/authApi";
 import { toast } from "@/hooks/use-toast";
 import { CustomError } from "@/types/errorType";
 import axios from "axios";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useUpdateProfileMutation } from "@/redux/api/userApi";
 import Image from "next/image";
 import { revalidateTag } from "next/cache";
+import { AuthContext } from "@/provider/AuthProvider";
 
 const FormSchema = z.object({
   name: z.string().min(2),
@@ -33,7 +33,7 @@ const FormSchema = z.object({
 });
 
 export function UpdateProfileForm({ userInfo, setAlertOpen }: any) {
-    const { data: userData } = useCheckLoginQuery(undefined);  
+  const {user: userData} = useContext(AuthContext);
   
  
   const [updateProfile, { isLoading, isError, error }] =

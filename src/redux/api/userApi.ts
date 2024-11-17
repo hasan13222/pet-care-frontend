@@ -2,26 +2,26 @@ import { baseApi } from "./baseApi";
 
 const userApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getProfile: builder.query({
-      query: (token) => ({
-        url: "/api/users/me",
-        method: "GET",
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
-      }),
-      providesTags: ["userProfile"]
-    }),
-    getUserProfile: builder.query({
-      query: (payload) => ({
-        url: `/api/users/${payload.userId}`,
-        method: "GET",
-        headers: {
-            'Authorization': `Bearer ${payload.token}`
-        }
-      }),
-      providesTags: ["userProfile"]
-    }),
+    // getProfile: builder.query({
+    //   query: (token) => ({
+    //     url: "/api/users/me",
+    //     method: "GET",
+    //     headers: {
+    //         'Authorization': `Bearer ${token}`
+    //     }
+    //   }),
+    //   providesTags: ["userProfile"]
+    // }),
+    // getUserProfile: builder.query({
+    //   query: (payload) => ({
+    //     url: `/api/users/${payload.userId}`,
+    //     method: "GET",
+    //     headers: {
+    //         'Authorization': `Bearer ${payload.token}`
+    //     }
+    //   }),
+    //   providesTags: ["userProfile"]
+    // }),
     deleteUser: builder.mutation({
       query: (payload) => ({
         url: `/api/users/${payload.userId}`,

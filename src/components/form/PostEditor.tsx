@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 // import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import {
@@ -12,11 +12,10 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import dynamic from "next/dynamic";
-import { useCreatePostMutation } from "@/redux/api/postApi";
-import { useCheckLoginQuery } from "@/redux/api/authApi";
 import { toast } from "@/hooks/use-toast";
 import axios from "axios";
-import { CustomError } from "@/types/errorType";
+import { useCreatePost } from "@/hooks/post.hooks";
+import { TPost } from "@/services/postService";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
@@ -28,14 +27,10 @@ const PostEditor = () => {
     setValue(content);
   };
   const postAttachmentRef = useRef<HTMLInputElement>(null);
-    const { data: userData } = useCheckLoginQuery(undefined);  
-
-    
 
  
-  const [createPost, { isError, error }] = useCreatePostMutation(
-    userData?.data?.token
-  );
+  // const [createPost, { isError, error }] = useCreatePostMutation();
+  const {mutate: createPost } = useCreatePost();
 
   function handlePremium(val: any) {
     setIsPremium(val);
@@ -76,31 +71,32 @@ const PostEditor = () => {
         image_attachments = await Promise.all(uploadPromises);
     }
 
-    const newPost = {
-        user: userData?.data?._id,
+    const newPost: TPost = {
         description: value,
         type: isPremium ? "premium" : "regular",
         category,
         image_attachments,
     };
 
-    const createdPost = await createPost({
-        token: userData?.data?.token,
-        postBody: newPost,
-    });
 
-    if (createdPost.data) {
-        toast({ title: "Post Uploaded successfully" });
-    }
+    await createPost(newPost);
+    // const createdPost = await createPost({
+    //     token: userData?.data?.token,
+    //     postBody: newPost,
+    // });
+
+    // if (createdPost.data) {
+    //     toast({ title: "Post Uploaded successfully" });
+    // }
 }
 
 
-  if (isError) {
-    toast({
-      title: "Something went wrong",
-      description: (error as CustomError).data.message,
-    });
-  }
+  // if (isError) {
+  //   toast({
+  //     title: "Something went wrong",
+  //     description: (error as CustomError).data.message,
+  //   });
+  // }
   return (
     <>
       <ReactQuill value={value} onChange={handleChange} />

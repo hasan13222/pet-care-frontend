@@ -1,9 +1,8 @@
 "use client";
 import { toast } from "@/hooks/use-toast";
-import { useCheckLoginQuery } from "@/redux/api/authApi";
 import { useInteractPostMutation } from "@/redux/api/postApi";
 import { CustomError } from "@/types/errorType";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -18,12 +17,12 @@ import {
 import { Button } from "@/components/ui/button";
 import "react-quill/dist/quill.snow.css";
 import dynamic from "next/dynamic";
+import { AuthContext } from "@/provider/AuthProvider";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 const PostInteract = ({ postInfo }: any) => {
-    const { data: userData } = useCheckLoginQuery(undefined);  
 
-   
+   const {user: userData} = useContext(AuthContext);
 
  
   const [isUserUpvoted, setIsUserUpvoted] = useState(false);

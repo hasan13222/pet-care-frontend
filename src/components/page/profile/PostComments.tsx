@@ -13,17 +13,17 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import avatar from "@/assets/images/man.png";
-import { useCheckLoginQuery } from "@/redux/api/authApi";
 import { useInteractPostMutation } from "@/redux/api/postApi";
 import "react-quill/dist/quill.snow.css";
 import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import moment from "moment";
+import { AuthContext } from "@/provider/AuthProvider";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 const PostComments = ({ postInfo }: any) => {
-    const { data: userData } = useCheckLoginQuery(undefined);  
+    const { data: userData } = useContext(AuthContext);  
 
   
 

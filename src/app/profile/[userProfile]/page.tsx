@@ -1,25 +1,12 @@
-"use client";
 import Image from "next/image";
 import avatar from "@/assets/images/man.png";
 import { Button } from "@/components/ui/button";
-import ProfileEditComp from "@/components/page/profile/ProfileEditComp";
-import SinglePost from "@/components/shared/SinglePost";
-import PostEditor from "@/components/form/PostEditor";
-import { Fragment, useEffect, useState } from "react";
-import Posts from "@/components/shared/Posts";
-import Myposts from "@/components/page/profile/Myposts";
 import Userposts from "@/components/page/profile/UserPosts";
-import { useGetUserProfileQuery } from "@/redux/api/userApi";
-import { useCheckLoginQuery } from "@/redux/api/authApi";
+import { getUserProfile } from "@/services/userService";
 
-export default function page({ params }: any) {
-  const {data: userData} = useCheckLoginQuery(undefined);
-  const {data: user} = useGetUserProfileQuery({
-    token: userData?.data.token,
-    userId: params.userProfile,
-  });
+export default async function page({ params }: any) {
+  const { data: user } = await getUserProfile(params.userProfile);
 
-  
   return (
     <div className="font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-8 items-center my-3">

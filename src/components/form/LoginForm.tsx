@@ -8,7 +8,6 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
-  AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -27,14 +26,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
-import {
-  useCheckLoginQuery,
-  useForgetPasswordMutation,
-  useLoginUserMutation,
-} from "@/redux/api/authApi";
 import { toast } from "@/hooks/use-toast";
 import { CustomError } from "@/types/errorType";
 import { useEffect, useRef, useState } from "react";
+import { useUserForgetPassword, useUserLogin } from "@/hooks/auth.hooks";
 
 const FormSchema = z.object({
   email: z.string().email({
@@ -44,7 +39,10 @@ const FormSchema = z.object({
 });
 
 export function LoginForm() {
-  const [login, { isLoading, isError, error }] = useLoginUserMutation();
+  // const [login, { isLoading, isError, error }] = useLoginUserMutation();
+
+  const { mutate: handleUserLogin, isPending } = useUserLogin();
+
   const router = useRouter();
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -56,36 +54,22 @@ export function LoginForm() {
   });
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
-    const loggedInUser = await login(data);
-    if (loggedInUser.data) {
-      router.push("/");
-    }
-    toast({ title: "Login success" });
+    handleUserLogin(data);
   }
-  if (isLoading) {
+  if (isPending) {
     toast({
       title: "Please wait...",
-      description: <p>Your are logging in.</p>
-    });
-  }
-  if (isError) {
-    console.log("Error");
-    toast({
-      title: "Something went wrong",
-      description: <p>{(error as CustomError)?.data?.message}</p>,
+      description: <p>Your are logging in.</p>,
     });
   }
 
   // handle forget password
-  const [sendLink] = useForgetPasswordMutation();
+  const { mutate: sendLink } = useUserForgetPassword();
   const forgetPassEmailRef = useRef<HTMLInputElement>(null);
-  async function forgetPasswordHandler() {
-    const linkSent = await sendLink({
+  function forgetPasswordHandler() {
+    sendLink({
       email: forgetPassEmailRef.current!.value,
     });
-    if (linkSent.data) {
-      toast({ title: "Link sent to your email. Please check your email." });
-    }
   }
 
   return (
