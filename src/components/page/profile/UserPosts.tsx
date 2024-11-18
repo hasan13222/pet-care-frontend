@@ -1,16 +1,9 @@
-"use client";
 import SinglePost from "@/components/shared/SinglePost";
-import { AuthContext } from "@/provider/AuthProvider";
-import { useGetUserPostsQuery } from "@/redux/api/postApi";
-import { Fragment, useContext, useEffect, useState } from "react";
+import { getUserPosts } from "@/services/postService";
+import { Fragment } from "react";
 
-const Userposts = ({ userId }: any) => {
-  const { user: userData } = useContext(AuthContext);
-
-  const { data: posts } = useGetUserPostsQuery({
-    token: userData?.data.token,
-    userId,
-  });
+const Userposts = async ({ userId }: any) => {
+  const posts = await getUserPosts(userId);
   return (
     <>
       {posts?.data?.map((post: any) => (

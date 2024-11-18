@@ -1,6 +1,8 @@
 "use server";
+import { TPayment } from "@/hooks/post.hooks";
 import { axiosSecure } from "@/lib/axiosInstance";
 import { revalidateTag } from "next/cache";
+import { cookies } from "next/headers";
 
 export interface TPost {
   description: string;
@@ -12,7 +14,7 @@ export interface TPost {
 export const createPost = async (payload: TPost) => {
   try {
     const { data } = await axiosSecure.post("/api/posts", payload);
-    revalidateTag("my-post");
+    revalidateTag("my-posts");
     return data;
   } catch (error: any) {
     throw new Error(error);
@@ -23,6 +25,72 @@ export const updatePost = async (postId: string, payload: Partial<TPost>) => {
   try {
     const { data } = await axiosSecure.post(`/api/posts/${postId}`, payload);
     return data;
+  } catch (error: any) {
+    throw new Error(error);
+  }
+};
+
+export const paymentPost = async (postId: string, payload: TPayment) => {
+  try {
+    const { data } = await axiosSecure.patch(`/api/posts/${postId}/payment`, payload);
+    return data;
+  } catch (error: any) {
+    throw new Error(error);
+  }
+};
+
+export const interactPost = async (postId: string, body: Partial<TPost>, param:any) => {
+  try {
+    console.log(body)
+    const { data } = await axiosSecure.patch(`/api/posts/${postId}/interact`, body, {params: param});
+    revalidateTag("my-posts")
+    revalidateTag("user-posts")
+    revalidateTag("posts")
+    return data;
+  } catch (error: any) {
+    throw new Error(error);
+  }
+};
+
+export const deletePost = async (postId: string) => {
+  try {
+    const { data } = await axiosSecure.delete(`/api/posts/${postId}`);
+    return data;
+  } catch (error: any) {
+    throw new Error(error);
+  }
+};
+
+export const getAllPosts = async (params: any) => {
+  try {
+    const accessToken = cookies().get("accessToken")?.value;
+    const queryString = new URLSearchParams(params).toString();
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_VITE_BASEAPI}/api/posts`,
+      {
+        credentials: "include",
+        headers: { Authorization: `Bearer ${accessToken}` },
+        next: { tags: ["all-posts"] },
+      }
+    );
+    return res.json();
+  } catch (error: any) {
+    throw new Error(error);
+  }
+};
+
+export const getUserPosts = async (userId: string) => {
+  try {
+    const accessToken = cookies().get("accessToken")?.value;
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_VITE_BASEAPI}/api/posts/${userId}`,
+      {
+        credentials: "include",
+        headers: { Authorization: `Bearer ${accessToken}` },
+        next: { tags: ["user-posts"] },
+      }
+    );
+    return res.json();
   } catch (error: any) {
     throw new Error(error);
   }

@@ -1,7 +1,4 @@
 "use client";
-import { toast } from "@/hooks/use-toast";
-import { useInteractPostMutation } from "@/redux/api/postApi";
-import { CustomError } from "@/types/errorType";
 import { useContext, useEffect, useState } from "react";
 import {
   AlertDialog,
@@ -18,11 +15,13 @@ import { Button } from "@/components/ui/button";
 import "react-quill/dist/quill.snow.css";
 import dynamic from "next/dynamic";
 import { AuthContext } from "@/provider/AuthProvider";
+import { useInteractPost } from "@/hooks/post.hooks";
+import { useGetMyProfile } from "@/hooks/user.hooks";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 const PostInteract = ({ postInfo }: any) => {
 
-   const {user: userData} = useContext(AuthContext);
+  const { data: userData } = useGetMyProfile();
 
  
   const [isUserUpvoted, setIsUserUpvoted] = useState(false);
@@ -31,12 +30,12 @@ const PostInteract = ({ postInfo }: any) => {
   const [alertOpen, setAlertOpen] = useState("");
   const [value, setValue] = useState("");
 
-  const [interactPost, { isError, error }] = useInteractPostMutation(userData);
+  const {mutate: interactPost} = useInteractPost(postInfo._id);
 
   const handleChange = (val: string) => {
     setValue(val);
   };
-  const handleInteract = async (newInteraction: any) => {
+  const handleInteract = (newInteraction: any) => {
     setAlertOpen("close");
     if(isUserUpvoted && newInteraction.upvote){
       return;
@@ -44,26 +43,16 @@ const PostInteract = ({ postInfo }: any) => {
     if(isUserDownvoted && newInteraction.downvote){
       return;
     }
-    const interactedPost = await interactPost({
-      token: userData?.data.token,
+    interactPost({
       postBody: newInteraction,
-      postId: postInfo._id,
       query: { upvoted: isUserUpvoted, downvoted: isUserDownvoted },
     });
     
   };
 
-  if (isError) {
-    toast({
-      title: "Something went wrong",
-      description: (error as CustomError).data.message,
-    });
-  }
-
   useEffect(() => {
     const isUserUpvotedRes = postInfo.upvote.some(
       (item: string) => {
-        console.log(item, userData?.data?._id)
         return item === userData?.data?._id
       }
     );

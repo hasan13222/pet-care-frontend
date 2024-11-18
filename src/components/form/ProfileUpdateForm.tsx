@@ -25,6 +25,7 @@ import { useUpdateProfileMutation } from "@/redux/api/userApi";
 import Image from "next/image";
 import { revalidateTag } from "next/cache";
 import { AuthContext } from "@/provider/AuthProvider";
+import { useUpdateProfile } from "@/hooks/user.hooks";
 
 const FormSchema = z.object({
   name: z.string().min(2),
@@ -33,11 +34,9 @@ const FormSchema = z.object({
 });
 
 export function UpdateProfileForm({ userInfo, setAlertOpen }: any) {
-  const {user: userData} = useContext(AuthContext);
-  
- 
-  const [updateProfile, { isLoading, isError, error }] =
-    useUpdateProfileMutation(userData?.data?.token);
+  const { user: userData } = useContext(AuthContext);
+
+  const { mutate: updateProfile, isPending: isLoading } = useUpdateProfile();
 
   const userImageFileRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
@@ -61,24 +60,10 @@ export function UpdateProfileForm({ userInfo, setAlertOpen }: any) {
             ...data,
             profile_picture: imgData.data.data.display_url,
           };
-          const signedUpUser = await updateProfile({
-            token: userData?.data?.token,
-            updateInfo: newUser,
-          });
-          if (signedUpUser.data) {
-            window.location.reload();
-          }
-          toast({ title: "updateProfile success" });
+          updateProfile(newUser);
         })
         .catch(async () => {
-          const signedUpUser = await updateProfile({
-            token: userData?.data?.token,
-            updateInfo: data,
-          });
-          if (signedUpUser.data) {
-            window.location.reload();
-          }
-          toast({ title: "updateProfile success" });
+          updateProfile(data);
         });
     }
   }
@@ -87,12 +72,6 @@ export function UpdateProfileForm({ userInfo, setAlertOpen }: any) {
     toast({
       title: "Please wait...",
       description: <p>Your profile update is ongoing.</p>,
-    });
-  }
-  if (isError) {
-    toast({
-      title: "Something went wrong",
-      description: <p>{(error as CustomError)?.data?.message}</p>,
     });
   }
 

@@ -27,7 +27,6 @@ export const signupUser = async (payload: any) => {
   try {
     const { data } = await axiosPublic.post("/api/auth/signup", payload);
 
-    console.log(data)
     return data;
   } catch (error: any) {
     throw new Error(error);

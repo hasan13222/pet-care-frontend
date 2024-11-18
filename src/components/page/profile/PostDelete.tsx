@@ -1,38 +1,20 @@
 "use client";
-import { toast } from "@/hooks/use-toast";
-import { AuthContext } from "@/provider/AuthProvider";
-import { useDeletePostMutation } from "@/redux/api/postApi";
-import { CustomError } from "@/types/errorType";
-import { useContext, useEffect, useState } from "react";
+import { useDeletePost } from "@/hooks/post.hooks";
 import { MdDelete } from "react-icons/md";
 const PostDelete = ({ postId }: any) => {
-    const { user: userData } = useContext(AuthContext);  
 
-  
+  const { mutate: deletePost } = useDeletePost();
 
- 
-
-  const [deletePost, { isError, error }] = useDeletePostMutation(userData);
-
-  const handleDeletePost = async () => {
-    const deletedPost = await deletePost({
-      token: userData.data.token,
-      postId: postId,
-    });
-    if (deletedPost.data) {
-      toast({ title: "Post deleted successfully" });
-    }
+  const handleDeletePost = () => {
+    deletePost(postId);
   };
 
-  if (isError) {
-    toast({
-      title: "Something went wrong",
-      description: (error as CustomError).data.message,
-    });
-  }
   return (
     <>
-      <MdDelete onClick={handleDeletePost} className="cursor-pointer text-red-500" />
+      <MdDelete
+        onClick={handleDeletePost}
+        className="cursor-pointer text-red-500"
+      />
     </>
   );
 };

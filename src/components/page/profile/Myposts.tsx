@@ -1,5 +1,4 @@
 import SinglePost from "@/components/shared/SinglePost";
-import { axiosSecure } from "@/lib/axiosInstance";
 import { cookies } from "next/headers";
 import { Fragment, useEffect, useState } from "react";
 
@@ -9,7 +8,7 @@ const Myposts = async () => {
   const res = await fetch(`${process.env.NEXT_PUBLIC_VITE_BASEAPI}/api/posts/my-post`, {
     credentials: "include",
     headers: { Authorization: `Bearer ${accessToken}` },
-    next: { tags: ["my-post"] },
+    next: { tags: ["my-posts"] },
   });
   const posts = await res.json();
 

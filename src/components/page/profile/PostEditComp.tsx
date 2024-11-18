@@ -13,13 +13,9 @@ import {
 
 import "react-quill/dist/quill.snow.css";
 import { FaEdit } from "react-icons/fa";
-import { useContext, useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import dynamic from "next/dynamic";
-import { useUpdatePostMutation } from "@/redux/api/postApi";
-import { toast } from "@/hooks/use-toast";
-import { CustomError } from "@/types/errorType";
-import { AuthContext } from "@/provider/AuthProvider";
 import { useUpdatePost } from "@/hooks/post.hooks";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
@@ -27,9 +23,6 @@ const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 const PostEditComp = ({ postDesc, postId }: any) => {
   const [alertOpen, setAlertOpen] = useState("");
   const [value, setValue] = useState(postDesc);
-
-  const {user: userData} = useContext(AuthContext);
-
   
   const {mutate: updatePost} = useUpdatePost(postId);
 
@@ -37,10 +30,10 @@ const PostEditComp = ({ postDesc, postId }: any) => {
     setValue(val);
   };
 
-  async function handleUpdatePost() {
+  function handleUpdatePost() {
     setAlertOpen("close");
     const updatedesc = { description: value };
-    const updatedPost = await updatePost(updatedesc);
+    updatePost(updatedesc);
   }
 
   

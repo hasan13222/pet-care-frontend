@@ -13,43 +13,38 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import avatar from "@/assets/images/man.png";
-import { useInteractPostMutation } from "@/redux/api/postApi";
 import "react-quill/dist/quill.snow.css";
 import dynamic from "next/dynamic";
 import { useContext, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import moment from "moment";
 import { AuthContext } from "@/provider/AuthProvider";
+import { useInteractPost } from "@/hooks/post.hooks";
+import { useGetMyProfile } from "@/hooks/user.hooks";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 const PostComments = ({ postInfo }: any) => {
-    const { data: userData } = useContext(AuthContext);  
-
   
-
+  const { data: userData } = useGetMyProfile();
   const [alertOpen, setAlertOpen] = useState("");
   const [value, setValue] = useState("");
 
-  const [interactPost, { isError, error }] = useInteractPostMutation(userData);
+  const {mutate: interactPost} = useInteractPost(postInfo._id);
 
   const handleChange = (val: string) => {
     setValue(val);
   };
-  const handleEditComment = async (newInteraction: any) => {
+  const handleEditComment = (newInteraction: any) => {
     setAlertOpen("close");
-    const interactedPost = await interactPost({
-      token: userData?.data.token,
+    interactPost({
       postBody: newInteraction,
-      postId: postInfo._id,
       query: { updateComment: "edit" },
     });
   };
 
-  const handleDeleteComment = async (newInteraction: any) => {
-    const interactedPost = await interactPost({
-      token: userData?.data.token,
+  const handleDeleteComment = (newInteraction: any) => {
+    interactPost({
       postBody: newInteraction,
-      postId: postInfo._id,
       query: { updateComment: "delete" },
     });
   };

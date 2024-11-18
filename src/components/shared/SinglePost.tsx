@@ -23,13 +23,13 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { toast } from "@/hooks/use-toast";
-import { usePaymentPostMutation } from "@/redux/api/postApi";
 import { useRouter } from "next/navigation";
 import {
-  useFollowUserMutation,
-  useUnfollowUserMutation,
-} from "@/redux/api/userApi";
-import { useGetMyProfile } from "@/hooks/user.hooks";
+  useFollowUser,
+  useGetMyProfile,
+  useUnFollowUser,
+} from "@/hooks/user.hooks";
+import { usePaymentPost } from "@/hooks/post.hooks";
 
 const SinglePost = ({ postInfo, editOption = false }: any) => {
   const [alertOpen, setAlertOpen] = useState("");
@@ -38,13 +38,16 @@ const SinglePost = ({ postInfo, editOption = false }: any) => {
 
   const router = useRouter();
 
-  const {data: userData} = useGetMyProfile();
+  const { data: userData } = useGetMyProfile();
+  const { mutate: follow } = useFollowUser(userData?.data._id);
+  const { mutate: unfollow } = useUnFollowUser(userData?.data._id);
+  const { mutate: doPayment, isSuccess: paymentSuccess, data } = usePaymentPost(userData?.data._id);
 
   // follow unfollow
-  const [follow, {}] = useFollowUserMutation(userData);
-  const [unfollow, {}] = useUnfollowUserMutation(userData);
+  // const [follow, {}] = useFollowUserMutation(userData);
+  // const [unfollow, {}] = useUnfollowUserMutation(userData);
 
-  const [doPayment, {}] = usePaymentPostMutation(userData);
+  // const [doPayment, {}] = usePaymentPostMutation(userData);
 
   const isUserGetAccess = postInfo?.accessUser.some(
     (item: any) => item === userData?.data._id
@@ -63,19 +66,11 @@ const SinglePost = ({ postInfo, editOption = false }: any) => {
   };
 
   // follow unfollow
-  async function handleFollow() {
-    await follow({
-      token: userData?.data.token,
-      userId: userData?.data._id,
-      postBody: { following: postInfo.user._id },
-    });
+  function handleFollow() {
+    follow({ following: postInfo.user._id });
   }
-  async function handleUnFollow() {
-    await unfollow({
-      token: userData?.data.token,
-      userId: userData?.data._id,
-      postBody: { following: postInfo.user._id },
-    });
+  function handleUnFollow() {
+    unfollow({ following: postInfo.user._id });
   }
 
   const handlePay = async () => {
@@ -106,15 +101,12 @@ const SinglePost = ({ postInfo, editOption = false }: any) => {
         setAlertOpen("open");
         return;
       }
+      
+      doPayment({ accessUser: userData?.data._id })
 
-      const completePayment = await doPayment({
-        token: userData?.data.token,
-        postBody: { accessUser: userData?.data._id },
-        postId: postInfo?._id,
-      });
-      if (completePayment?.data?.success) {
+      if (paymentSuccess) {
         await stripe
-          .confirmCardPayment(completePayment.data.data.clientSecret, {
+          .confirmCardPayment(data.data.clientSecret, {
             payment_method: {
               card: card,
               billing_details: {
@@ -142,8 +134,6 @@ const SinglePost = ({ postInfo, editOption = false }: any) => {
     }
   };
 
-
-
   return (
     <>
       <div className="post_single border rounded-md mb-5 p-4">
@@ -165,15 +155,16 @@ const SinglePost = ({ postInfo, editOption = false }: any) => {
                   {postInfo.user.name}
                 </h3>
 
-                {userData?.data._id !== postInfo.user._id && isUserFollowing && (
-                  <Button
-                    onClick={handleUnFollow}
-                    className="bg-primary px-2 text-white"
-                    size={null}
-                  >
-                    UnFollow
-                  </Button>
-                )}
+                {userData?.data._id !== postInfo.user._id &&
+                  isUserFollowing && (
+                    <Button
+                      onClick={handleUnFollow}
+                      className="bg-primary px-2 text-white"
+                      size={null}
+                    >
+                      UnFollow
+                    </Button>
+                  )}
                 {userData?.data._id !== postInfo.user._id &&
                   !isUserFollowing && (
                     <Button
