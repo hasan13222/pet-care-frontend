@@ -1,36 +1,30 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## Pet Care Service
 
-## Getting Started
+### [Live URL](https://pet-care-frontend-brown.vercel.app) 
 
-First, run the development server:
+### Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+-  Social media app where user can share tips and story of their favorite pets and can enjoy others post. 
+-  Secure user authentication and authorization using JWT.
+-  Users can write and edit pet care tips and stories using a rich text editor or Markdown, providing flexibility and ease of use for formatting. user can delete their own contents.
+-  Authors can attach images to their posts, making the content more engaging and visually appealing.
+-  Authors(the user who wrote the post) have the option to create premium content, enabling them to monetize their stories and tips by offering exclusive insights or advice. Users can upvote or downvote both posts.
+-  Users can comment on posts, with the ability to edit or delete their own comments.
+-  Stripe enables secure payments for premium features, such as access to exclusive content.
+-  A real-time news feed showcasing the latest pet care tips and stories.
+-  Infinite Scroll
+-  Premium posts are highlighted with a special badge. Users can view a preview, but the full content is accessible only after completing a payment.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Technology used
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+    Next.js, Tailwind
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Follow the below instructions to run the application in your local machine
 
-## Learn More
+- First clone the github repository or download the zip file
+- run "npm install" command. Thus you can get all the required dependencies required for the application
+- prepare backend and run as per backend
+- In Product form in place of imgbb api key, replace your api key with
+- then run "npm run dev" command to run the application as development mode in your machine
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Thanks for following the instructions.

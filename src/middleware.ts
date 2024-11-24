@@ -1,10 +1,9 @@
+import { getCurrentUser } from '@/services/authService';
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { getCurrentUser } from './services/userService'
 
 export async function middleware(request: NextRequest) {
     const user = await getCurrentUser();
-    console.log(user)
     if(user){
         return NextResponse.next();
     }

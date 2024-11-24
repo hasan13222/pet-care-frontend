@@ -1,10 +1,10 @@
 import { getNewAccessToken } from "@/services/authService";
 import axios from "axios"
 import { cookies } from "next/headers";
-// export const axiosPublic = axios.create({baseURL: 'https://pet-care-server-nu.vercel.app'});
-// export const axiosSecure = axios.create({baseURL: 'https://pet-care-server-nu.vercel.app', withCredentials: true});
-export const axiosPublic = axios.create({baseURL: 'http://localhost:5000'});
-export const axiosSecure = axios.create({baseURL: 'http://localhost:5000', withCredentials: true});
+export const axiosPublic = axios.create({baseURL: 'https://pet-care-server-nu.vercel.app'});
+export const axiosSecure = axios.create({baseURL: 'https://pet-care-server-nu.vercel.app', withCredentials: true});
+// export const axiosPublic = axios.create({baseURL: 'http://localhost:5000'});
+// export const axiosSecure = axios.create({baseURL: 'http://localhost:5000', withCredentials: true});
 
 
 axiosSecure.interceptors.request.use(

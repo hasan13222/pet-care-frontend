@@ -23,13 +23,13 @@ export function NavigationMenuComp() {
             </NavigationMenuLink>
           </Link>
         </NavigationMenuItem>
-        <NavigationMenuItem>
+        {/* <NavigationMenuItem>
           <Link href="/explore" legacyBehavior passHref>
             <NavigationMenuLink style={{background: 'transparent'}} className={navigationMenuTriggerStyle()}>
               Explore
             </NavigationMenuLink>
           </Link>
-        </NavigationMenuItem>
+        </NavigationMenuItem> */}
         <NavigationMenuItem>
           <Link href="/about" legacyBehavior passHref>
             <NavigationMenuLink style={{background: 'transparent'}} className={navigationMenuTriggerStyle()}>

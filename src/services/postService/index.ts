@@ -23,7 +23,8 @@ export const createPost = async (payload: TPost) => {
 
 export const updatePost = async (postId: string, payload: Partial<TPost>) => {
   try {
-    const { data } = await axiosSecure.post(`/api/posts/${postId}`, payload);
+    const { data } = await axiosSecure.patch(`/api/posts/${postId}`, payload);
+    revalidateTag("my-posts");
     return data;
   } catch (error: any) {
     throw new Error(error);
@@ -32,6 +33,7 @@ export const updatePost = async (postId: string, payload: Partial<TPost>) => {
 
 export const paymentPost = async (postId: string, payload: TPayment) => {
   try {
+    console.log(postId, payload)
     const { data } = await axiosSecure.patch(`/api/posts/${postId}/payment`, payload);
     return data;
   } catch (error: any) {
@@ -41,11 +43,9 @@ export const paymentPost = async (postId: string, payload: TPayment) => {
 
 export const interactPost = async (postId: string, body: Partial<TPost>, param:any) => {
   try {
-    console.log(body)
     const { data } = await axiosSecure.patch(`/api/posts/${postId}/interact`, body, {params: param});
-    revalidateTag("my-posts")
-    revalidateTag("user-posts")
-    revalidateTag("posts")
+    revalidateTag("my-posts");
+    revalidateTag("user-posts");
     return data;
   } catch (error: any) {
     throw new Error(error);
@@ -55,6 +55,7 @@ export const interactPost = async (postId: string, body: Partial<TPost>, param:a
 export const deletePost = async (postId: string) => {
   try {
     const { data } = await axiosSecure.delete(`/api/posts/${postId}`);
+    revalidateTag("my-posts");
     return data;
   } catch (error: any) {
     throw new Error(error);
@@ -70,10 +71,10 @@ export const getAllPosts = async (params: any) => {
       {
         credentials: "include",
         headers: { Authorization: `Bearer ${accessToken}` },
-        next: { tags: ["all-posts"] },
       }
     );
-    return res.json();
+    const data = await res.json();
+    return data;
   } catch (error: any) {
     throw new Error(error);
   }

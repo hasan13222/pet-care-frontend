@@ -35,6 +35,7 @@ export const signupUser = async (payload: any) => {
 
 export const getCurrentUser = async () => {
   const accessToken = cookies().get("accessToken")?.value;
+  console.log("accessToken: " + accessToken)
   let decodedToken = null;
 
   if (accessToken) {

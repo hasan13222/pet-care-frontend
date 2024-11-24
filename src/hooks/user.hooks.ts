@@ -43,9 +43,9 @@ export const useFollowUser = (userId: string) => {
   return useMutation<any, Error, TFollow>({
     mutationKey: ["user_follow"],
     mutationFn: async (payload) => await followUser(userId, payload),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["get_all_posts"] });
-      toast({ title: "following success" });
+    onSuccess: async () => {
+      queryClient.invalidateQueries({ queryKey: ["get_my_profile"] });
+      toast({ title: "following success" });      
     },
     onError: (error) => {
       toast({ title: "following error", description: error.message });
@@ -58,9 +58,9 @@ export const useUnFollowUser = (userId: string) => {
   return useMutation<any, Error, TFollow>({
     mutationKey: ["user_unfollow"],
     mutationFn: async (payload) => await unfollowUser(userId, payload),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["get_all_posts"] });
-      toast({ title: "unfollow success" });
+    onSuccess: async () => {
+      queryClient.invalidateQueries({ queryKey: ["get_my_profile"] });
+      toast({ title: "unfollow success" });     
     },
     onError: (error) => {
       toast({ title: "unfollow error", description: error.message });

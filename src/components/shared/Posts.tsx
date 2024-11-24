@@ -11,9 +11,15 @@ const Posts = () => {
   const [hasMore, setHasMore] = useState(true);
   const [limit, setLimit] = useState(2);
 
-  const {userData} = useContext(AuthContext);
+  const { userData } = useContext(AuthContext);
 
-  const {data: items, isError, error} = useGetAllPosts({limit: limit});
+  const {
+    data: items,
+    isFetching,
+    isError,
+    error,
+  } = useGetAllPosts({ limit: limit });
+  
   async function loadData() {
     if (items?.data?.length < limit) {
       setHasMore(false);

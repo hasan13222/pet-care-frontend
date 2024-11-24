@@ -1,6 +1,4 @@
 "use client";
-import { store } from "@/redux/store";
-import { Provider } from "react-redux";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -12,13 +10,11 @@ const StoreProvider = ({ children }: any) => {
     process.env.NEXT_PUBLIC_VITE_PAYMENT_PK as string
   );
   return (
-    <Provider store={store}>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
           <Elements stripe={stripePromise}>{children}</Elements>
         </AuthProvider>
       </QueryClientProvider>
-    </Provider>
   );
 };
 

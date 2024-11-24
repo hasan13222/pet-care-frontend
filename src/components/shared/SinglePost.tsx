@@ -9,7 +9,7 @@ import PostImage from "../page/profile/PostImage";
 import PostInteract from "../page/profile/PostInteract";
 import PostComments from "../page/profile/PostComments";
 import moment from "moment";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import {
@@ -30,6 +30,7 @@ import {
   useUnFollowUser,
 } from "@/hooks/user.hooks";
 import { usePaymentPost } from "@/hooks/post.hooks";
+import { useQueryClient } from "@tanstack/react-query";
 
 const SinglePost = ({ postInfo, editOption = false }: any) => {
   const [alertOpen, setAlertOpen] = useState("");
@@ -41,13 +42,11 @@ const SinglePost = ({ postInfo, editOption = false }: any) => {
   const { data: userData } = useGetMyProfile();
   const { mutate: follow } = useFollowUser(userData?.data._id);
   const { mutate: unfollow } = useUnFollowUser(userData?.data._id);
-  const { mutate: doPayment, isSuccess: paymentSuccess, data } = usePaymentPost(userData?.data._id);
-
-  // follow unfollow
-  // const [follow, {}] = useFollowUserMutation(userData);
-  // const [unfollow, {}] = useUnfollowUserMutation(userData);
-
-  // const [doPayment, {}] = usePaymentPostMutation(userData);
+  const {
+    mutate: doPayment,
+    isSuccess: paymentSuccess,
+    data,
+  } = usePaymentPost(postInfo._id);
 
   const isUserGetAccess = postInfo?.accessUser.some(
     (item: any) => item === userData?.data._id
@@ -77,6 +76,14 @@ const SinglePost = ({ postInfo, editOption = false }: any) => {
     toast({ title: "Payment is ongoing..." });
     setAlertOpen("open");
     try {
+      doPayment({ accessUser: userData?.data._id });
+    } catch (e) {
+      toast({ description: e + "" });
+    }
+  };
+
+  async function completePyament() {
+    try {
       if (!stripe || !elements) {
         setAlertOpen("open");
         toast({ description: "stripe and element not found" });
@@ -101,39 +108,40 @@ const SinglePost = ({ postInfo, editOption = false }: any) => {
         setAlertOpen("open");
         return;
       }
-      
-      doPayment({ accessUser: userData?.data._id })
 
-      if (paymentSuccess) {
-        await stripe
-          .confirmCardPayment(data.data.clientSecret, {
-            payment_method: {
-              card: card,
-              billing_details: {
-                name: userData?.data?.name,
-                email: userData?.data?.email,
-              },
+      await stripe
+        .confirmCardPayment(data.data.clientSecret, {
+          payment_method: {
+            card: card,
+            billing_details: {
+              name: userData?.data?.name,
+              email: userData?.data?.email,
             },
-          })
-          .then(async function (result: any) {
-            if (result.error) {
-              toast({
-                description: "Your payment failed",
-              });
-            }
-            if (result.paymentIntent) {
-              setAlertOpen("close");
-              toast({
-                description: "Your payment is completed successfully",
-              });
-            }
-          });
-      }
+          },
+        })
+        .then(async function (result: any) {
+          if (result.error) {
+            toast({
+              description: "Your payment failed",
+            });
+          }
+          if (result.paymentIntent) {
+            setAlertOpen("close");
+            toast({
+              description: "Your payment is completed successfully",
+            });
+          }
+        });
     } catch (e) {
       toast({ description: e + "" });
     }
-  };
+  }
 
+  useEffect(() => {
+    if (paymentSuccess) {
+      completePyament();
+    }
+  }, [paymentSuccess]);
   return (
     <>
       <div className="post_single border rounded-md mb-5 p-4">

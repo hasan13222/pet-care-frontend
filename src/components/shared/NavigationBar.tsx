@@ -13,10 +13,7 @@ import {
 import Image from "next/image";
 import avatar from "@/assets/images/man.png";
 import { useRouter } from "next/navigation";
-import { title } from "process";
-import { toast } from "@/hooks/use-toast";
 import { Button } from "../ui/button";
-import { useGetProfileQuery } from "@/redux/api/userApi";
 import { AuthContext } from "@/provider/AuthProvider";
 import { logout } from "@/services/authService";
 

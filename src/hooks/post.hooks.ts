@@ -52,10 +52,12 @@ export type TPayment = {
   accessUser: string;
 };
 export const usePaymentPost = (postId: string) => {
+  const queryClient = useQueryClient();
   return useMutation<any, Error, TPayment>({
     mutationKey: ["PAYMENT_POST"],
     mutationFn: async (payload) => await paymentPost(postId, payload),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["get_all_posts"] });
       toast({ title: "post payment success" });
     },
     onError: (error) => {

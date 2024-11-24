@@ -1,4 +1,3 @@
-"use client"
 import { Button } from "@/components/ui/button";
 import React from "react";
 import Image from "next/image";
@@ -12,9 +11,13 @@ const page = () => {
           <div className="following">
             <h3>
               Following{" "}
-              <Button size="sm" className="h-[22px] bg-secondary px-[6px]" variant="secondary">
-                      30
-                    </Button>
+              <Button
+                size="sm"
+                className="h-[22px] bg-secondary px-[6px]"
+                variant="secondary"
+              >
+                30
+              </Button>
             </h3>
           </div>
           <div className="explore__users mt-3">
@@ -39,7 +42,9 @@ const page = () => {
                   </div>
                 </div>
                 <div className="follow">
-                    <Button size="sm" className="bg-primary">Follow</Button>
+                  <Button size="sm" className="bg-primary">
+                    Follow
+                  </Button>
                 </div>
               </div>
               <div className="user__single flex justify-between items-center my-5">
@@ -59,7 +64,9 @@ const page = () => {
                   </div>
                 </div>
                 <div className="follow">
-                    <Button size="sm" className="bg-primary">Follow</Button>
+                  <Button size="sm" className="bg-primary">
+                    Follow
+                  </Button>
                 </div>
               </div>
               <div className="user__single flex justify-between items-center my-5">
@@ -79,7 +86,9 @@ const page = () => {
                   </div>
                 </div>
                 <div className="follow">
-                    <Button size="sm" className="bg-primary">Follow</Button>
+                  <Button size="sm" className="bg-primary">
+                    Follow
+                  </Button>
                 </div>
               </div>
             </div>
