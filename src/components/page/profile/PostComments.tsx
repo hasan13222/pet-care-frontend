@@ -104,6 +104,7 @@ const PostComments = ({ postInfo }: any) => {
                                 comments: {
                                   comment: value,
                                   userId: userData.data?._id,
+                                  _id: comment?._id
                                 },
                               })
                             }

@@ -1,9 +1,7 @@
 "use client";
-import { CustomError } from "@/types/errorType";
 import { useContext, useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import SinglePost from "./SinglePost";
-import { useRouter } from "next/navigation";
 import { AuthContext } from "@/provider/AuthProvider";
 import { useGetAllPosts } from "@/hooks/post.hooks";
 

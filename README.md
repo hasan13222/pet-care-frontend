@@ -17,7 +17,7 @@
 
 ### Technology used
 
-    Next.js, Tailwind
+    Next.js, Tailwind, Shadcn
 
 ### Follow the below instructions to run the application in your local machine
 

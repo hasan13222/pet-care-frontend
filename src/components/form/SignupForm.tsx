@@ -18,7 +18,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import { toast } from "@/hooks/use-toast";
-import { CustomError } from "@/types/errorType";
 import axios from "axios";
 import { useRef } from "react";
 import { useUserSignup } from "@/hooks/auth.hooks";
@@ -33,6 +32,7 @@ const FormSchema = z.object({
   address: z.string().optional(),
   profile_picture: z.string().optional(),
 });
+
 
 export function SignupForm() {
   const router = useRouter();
