@@ -1,8 +1,10 @@
 "use client";
-
+import { IoHomeOutline } from "react-icons/io5";
+import { SlUserFollowing } from "react-icons/sl";
+import { FiUsers } from "react-icons/fi";
 import * as React from "react";
 import Link from "next/link";
-
+import { FaWpexplorer } from "react-icons/fa";
 import { cn } from "@/lib/utils";
 import {
   NavigationMenu,
@@ -11,36 +13,38 @@ import {
   NavigationMenuList,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
+import { usePathname } from "next/navigation";
 
 export function NavigationMenuComp() {
+  const pathname = usePathname();
   return (
     <NavigationMenu>
-      <NavigationMenuList>
-        <NavigationMenuItem>
+      <NavigationMenuList className="gap-2 sm:gap-5">
+        <NavigationMenuItem className="hover:opacity-60 hidden sm:block">
           <Link href="/" legacyBehavior passHref>
-            <NavigationMenuLink style={{background: 'transparent'}} className={navigationMenuTriggerStyle()}>
-              Home
+            <NavigationMenuLink style={{ background: pathname === "/" ? '#5e88b9' : "#ebf0f5", color: pathname === "/" ? "white": "black", padding: "8px 12px", height: "auto" }} className={navigationMenuTriggerStyle()}>
+              <IoHomeOutline size={15} />
             </NavigationMenuLink>
           </Link>
         </NavigationMenuItem>
-        {/* <NavigationMenuItem>
+        <NavigationMenuItem className="hover:opacity-60">
           <Link href="/explore" legacyBehavior passHref>
-            <NavigationMenuLink style={{background: 'transparent'}} className={navigationMenuTriggerStyle()}>
-              Explore
-            </NavigationMenuLink>
-          </Link>
-        </NavigationMenuItem> */}
-        <NavigationMenuItem>
-          <Link href="/about" legacyBehavior passHref>
-            <NavigationMenuLink style={{background: 'transparent'}} className={navigationMenuTriggerStyle()}>
-              About Us
+            <NavigationMenuLink style={{ background: pathname === "/explore" ? '#5e88b9' : "#ebf0f5", color: pathname === "/explore" ? "white": "black", padding: "8px 12px", height: "auto" }} className={navigationMenuTriggerStyle()}>
+              <FaWpexplorer size={15} />
             </NavigationMenuLink>
           </Link>
         </NavigationMenuItem>
-        <NavigationMenuItem>
-          <Link href="/contact" legacyBehavior passHref>
-            <NavigationMenuLink style={{background: 'transparent'}} className={navigationMenuTriggerStyle()}>
-              Contact Us
+        <NavigationMenuItem className="hover:opacity-60">
+          <Link href="/followers" legacyBehavior passHref>
+            <NavigationMenuLink style={{ background: pathname === "/followers" ? '#5e88b9' : "#ebf0f5", color: pathname === "/followers" ? "white": "black", padding: "8px 12px", height: "auto" }} className={navigationMenuTriggerStyle()}>
+              <FiUsers size={15} />
+            </NavigationMenuLink>
+          </Link>
+        </NavigationMenuItem>
+        <NavigationMenuItem className="hover:opacity-60">
+          <Link href="/following" legacyBehavior passHref>
+            <NavigationMenuLink style={{ background: pathname === "/following" ? '#5e88b9' : "#ebf0f5", color: pathname === "/following" ? "white": "black", padding: "8px 12px", height: "auto" }} className={navigationMenuTriggerStyle()}>
+              <SlUserFollowing size={15} />
             </NavigationMenuLink>
           </Link>
         </NavigationMenuItem>

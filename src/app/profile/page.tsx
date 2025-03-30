@@ -7,7 +7,7 @@ export default async function page() {
   return (
     <div className="font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-8 items-center my-3">
-        <div className="post__items max-w-[600px]">
+        <div className="post__items max-w-[600px] min-w-auto sm:min-w-[400px] md:min-w-[600px]">
           <UserInfo/>
 
           <Myposts/>

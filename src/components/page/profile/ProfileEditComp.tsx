@@ -25,7 +25,7 @@ const ProfileEditComp = ({ userInfo }: any) => {
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogDescription className="overflow-auto">
+          <AlertDialogDescription className="overflow-auto h-[calc(100vh-100px)]">
             <UpdateProfileForm
               setAlertOpen={setAlertOpen}
               userInfo={userInfo}

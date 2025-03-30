@@ -4,9 +4,12 @@ import { Button } from "@/components/ui/button";
 import ProfileEditComp from "@/components/page/profile/ProfileEditComp";
 import PostEditor from "@/components/form/PostEditor";
 import { axiosSecure } from "@/lib/axiosInstance";
+import Link from "next/link";
+import { getUserFollowers } from "@/services/userService";
 
 const UserInfo = async () => {
   const { data: user } = await axiosSecure.get("/api/users/me");
+  const followers = await getUserFollowers(user?.data?._id)
   return (
     <>
       <div className="post_header flex items-center border p-5 rounded-md mb-3">
@@ -33,7 +36,7 @@ const UserInfo = async () => {
                   className="h-[22px] bg-secondary px-[6px]"
                   variant="secondary"
                 >
-                  30
+                  <Link href="/following">{user?.data?.following?.length}</Link>
                 </Button>
               </h3>
             </div>
@@ -45,7 +48,7 @@ const UserInfo = async () => {
                   className="h-[22px] bg-secondary px-[6px]"
                   variant="secondary"
                 >
-                  300
+                  <Link href="/followers">{followers?.data?.length}</Link>
                 </Button>
               </h3>
             </div>
@@ -56,7 +59,7 @@ const UserInfo = async () => {
       <div className="create_post border rounded-md mb-4 p-4 flex gap-3 items-start">
         <Image
           className="rounded-full border-2 border-secondary cursor-pointer"
-          src={avatar}
+          src={user?.data?.profile_picture || avatar}
           width={40}
           height={40}
           alt="profile picture"

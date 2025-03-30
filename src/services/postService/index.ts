@@ -41,9 +41,9 @@ export const paymentPost = async (postId: string, payload: TPayment) => {
   }
 };
 
-export const interactPost = async (postId: string, body: Partial<TPost>, param:any) => {
+export const interactPost = async (postId: string, body: Partial<TPost>, param: any) => {
   try {
-    const { data } = await axiosSecure.patch(`/api/posts/${postId}/interact`, body, {params: param});
+    const { data } = await axiosSecure.patch(`/api/posts/${postId}/interact`, body, { params: param });
     revalidateTag("my-posts");
     revalidateTag("user-posts");
     return data;
@@ -89,6 +89,20 @@ export const getUserPosts = async (userId: string) => {
         credentials: "include",
         headers: { Authorization: `Bearer ${accessToken}` },
         next: { tags: ["user-posts"] },
+      }
+    );
+    return res.json();
+  } catch (error: any) {
+    throw new Error(error);
+  }
+};
+
+export const getPostsSummary = async () => {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_VITE_BASEAPI}/api/posts/summary/total`,
+      {
+        next: { revalidate: 60 },
       }
     );
     return res.json();

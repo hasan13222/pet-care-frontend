@@ -14,7 +14,6 @@ import {
 import { Button } from "@/components/ui/button";
 import "react-quill/dist/quill.snow.css";
 import dynamic from "next/dynamic";
-import { AuthContext } from "@/provider/AuthProvider";
 import { useInteractPost } from "@/hooks/post.hooks";
 import { useGetMyProfile } from "@/hooks/user.hooks";
 
@@ -35,6 +34,7 @@ const PostInteract = ({ postInfo }: any) => {
   const handleChange = (val: string) => {
     setValue(val);
   };
+  
   const handleInteract = (newInteraction: any) => {
     setAlertOpen("close");
     if(isUserUpvoted && newInteraction.upvote){
@@ -77,7 +77,7 @@ const PostInteract = ({ postInfo }: any) => {
               isUserUpvoted ? "text-primary" : "text-gray-800"
             } `}
           >
-            {postInfo.upvote.length } Upvote
+            {postInfo.upvote.length > 0 ? postInfo.upvote.length : "" } Like
           </button>
           <button
             onClick={() => handleInteract({ downvote: userData?.data?._id })}
@@ -85,7 +85,7 @@ const PostInteract = ({ postInfo }: any) => {
               isUserDownvoted ? "text-accent" : "text-gray-800"
             } `}
           >
-            {postInfo.downvote.length } Downvote
+            {postInfo.downvote.length > 0 ? postInfo.downvote.length : "" } Dislike
           </button>
           <AlertDialog
             onOpenChange={() => setAlertOpen("open")}
@@ -97,7 +97,7 @@ const PostInteract = ({ postInfo }: any) => {
                   isUserCommented ? "text-secondary" : "text-gray-800"
                 } `}
               >
-                {postInfo.comments.length }{" "}
+                {postInfo.comments.length > 0 ? postInfo.comments.length : "" }{" "}
                 Comments
               </button>
             </AlertDialogTrigger>

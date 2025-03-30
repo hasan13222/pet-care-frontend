@@ -78,10 +78,10 @@ export const useInteractPost = (postId: string) => {
       await interactPost(postId, payload.postBody, payload.query),
     onSuccess: () => {
       queryclient.invalidateQueries({ queryKey: ["get_all_posts"] });
-      toast({ title: "post interact success" });
+      // toast({ title: "post interact success" });
     },
     onError: (error) => {
-      toast({ title: "post interact error", description: error.message });
+      toast({ title: "Something went wrong.", description: error.message });
     },
   });
 };

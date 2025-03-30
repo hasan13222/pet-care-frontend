@@ -16,12 +16,15 @@ import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
 import { AuthContext } from "@/provider/AuthProvider";
 import { logout } from "@/services/authService";
+import { useGetMyProfile } from "@/hooks/user.hooks";
+import Link from "next/link";
 
 const NavigationBar = () => {
   const router = useRouter();
 
   const {user} = useContext(AuthContext);
 
+  const { data: userData } = useGetMyProfile();
   const handleLogout = async () => {
     await logout();
     router.push('/');
@@ -29,13 +32,11 @@ const NavigationBar = () => {
 
   return (
     <>
-      <div className="sticky z-50 top-0 flex justify-between items-center border-b border-gray-200 px-1 md:px-16 lg:px-28 py-3 bg-background">
+      <div className="sticky z-50 top-0 flex justify-between items-center border-b border-gray-200 px-1 md:px-16 lg:px-8 xl:px-28 py-3 bg-background">
         <div className="logo">
-          <h1 className="text-3xl text-primary font-bold">PTC</h1>
+          <h1 className="text-3xl text-primary font-bold"><Link href="/">PTC</Link></h1>
         </div>
-        <div className="nav_menu">
-          <NavigationMenuComp />
-        </div>
+        <NavigationMenuComp />
         <div className="user_profile flex gap-2 items-center">
           {!user && (
             <Button onClick={() => router.push("/signup")}>Signup</Button>
@@ -48,7 +49,7 @@ const NavigationBar = () => {
               <DropdownMenuTrigger>
                 <Image
                   className="rounded-full border-2 border-secondary cursor-pointer"
-                  src={avatar}
+                  src={userData?.data?.profile_picture || avatar}
                   width={40}
                   height={40}
                   alt="profile picture"
@@ -57,15 +58,15 @@ const NavigationBar = () => {
               <DropdownMenuContent align="end" className="min-w-[200px]">
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => router.push("/profile")}>
+                <DropdownMenuItem className="cursor-pointer" onClick={() => router.push("/profile")}>
                   Profile
                 </DropdownMenuItem>
-                <DropdownMenuItem
+                <DropdownMenuItem className="cursor-pointer"
                   onClick={() => router.push("/change-password")}
                 >
                   Change Password
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={handleLogout}>
+                <DropdownMenuItem className="cursor-pointer" onClick={handleLogout}>
                   Logout
                 </DropdownMenuItem>
               </DropdownMenuContent>

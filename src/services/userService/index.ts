@@ -1,7 +1,6 @@
 "use server";
 import { TUserProfile } from "@/hooks/user.hooks";
 import { axiosSecure } from "@/lib/axiosInstance";
-import { revalidateTag } from "next/cache";
 
 export const getCurrentUserProfile = async () => {
   try {
@@ -52,3 +51,29 @@ export const unfollowUser = async (userId: string, payload: TFollow) => {
     throw new Error(error);
   }
 };
+
+export const getUserFollowers = async (userId: string) => {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_VITE_BASEAPI}/api/users/followers/${userId}`, {
+      cache: "no-cache"
+    });
+    const followers = await res.json();
+    return followers;
+  } catch (error:any) {
+    throw new Error(error);
+  }
+}
+
+export const getAllUsers = async () => {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_VITE_BASEAPI}/api/users`, {
+      next: {
+          revalidate: 60
+      }
+    });
+    const users = await res.json();
+    return users;
+  } catch (error:any) {
+    throw new Error(error);
+  }
+}

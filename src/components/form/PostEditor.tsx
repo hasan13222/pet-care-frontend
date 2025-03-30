@@ -80,6 +80,7 @@ const PostEditor = () => {
 
 
     await createPost(newPost);
+    setValue("")
     // const createdPost = await createPost({
     //     token: userData?.data?.token,
     //     postBody: newPost,
@@ -104,7 +105,7 @@ const PostEditor = () => {
         <div className="flex items-center space-x-2">
           <Select
             onValueChange={(value) => setCategory(value)}
-            defaultValue="0"
+            defaultValue="story"
           >
             <SelectTrigger className="h-[35px] text-gray-500">
               <SelectValue placeholder="Theme" />

@@ -30,7 +30,8 @@ import {
   useUnFollowUser,
 } from "@/hooks/user.hooks";
 import { usePaymentPost } from "@/hooks/post.hooks";
-import { useQueryClient } from "@tanstack/react-query";
+import { RiArticleLine } from "react-icons/ri";
+import { MdOutlineTipsAndUpdates } from "react-icons/md";
 
 const SinglePost = ({ postInfo, editOption = false }: any) => {
   const [alertOpen, setAlertOpen] = useState("");
@@ -53,7 +54,7 @@ const SinglePost = ({ postInfo, editOption = false }: any) => {
   );
 
   const isUserFollowing = userData?.data.following.some(
-    (item: any) => item === postInfo.user._id
+    (item: any) => item._id === postInfo?.user._id
   );
 
   const handleUserContent = () => {
@@ -184,7 +185,6 @@ const SinglePost = ({ postInfo, editOption = false }: any) => {
                     </Button>
                   )}
               </div>
-
               <p className="text-xs text-gray-600">
                 {moment(postInfo.createdAt).format("MM-DD-YY, h:mm:ss a")}
               </p>
@@ -193,6 +193,12 @@ const SinglePost = ({ postInfo, editOption = false }: any) => {
           <div className="premium_badge_n_edit flex items-center gap-1">
             {postInfo.type === "premium" && (
               <HiBadgeCheck size={20} className="text-accent" />
+            )}
+            {postInfo.category === "tip" && (
+              <MdOutlineTipsAndUpdates size={20} className="text-secondary" />
+            )}
+            {postInfo.category === "story" && (
+              <RiArticleLine size={20} className="text-secondary" />
             )}
 
             {editOption && (
